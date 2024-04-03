@@ -81,12 +81,12 @@ func process(file string) error {
 
 	img := createImage(data, imageSize)
 
-	outputImage := trimFilenameExtension(file) + "_image.png"
-	if err := saveImageToFile(img, outputImage); err != nil {
+	imageName := fmt.Sprintf("%s_%vx%v_image.png", trimFilenameExtension(file), imageSize, imageSize)
+	if err := saveImageToFile(img, imageName); err != nil {
 		return fmt.Errorf("failed to save image: %w", err)
 	}
 
-	fmt.Println("Image successfully created:", outputImage)
+	fmt.Println("Image successfully created:", imageName)
 	return nil
 }
 
