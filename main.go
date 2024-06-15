@@ -14,15 +14,6 @@ const (
 	bytesPerPixel = 3
 )
 
-// Trims the extension of the file.
-func trimFilenameExtension(filename string) string {
-	pos := strings.LastIndexByte(filename, '.')
-	if pos != -1 {
-		return filename[:pos]
-	}
-	return filename
-}
-
 // Reads binary data from the file.
 func readDataFromFile(file string) ([]byte, error) {
 	data, err := os.ReadFile(file)
@@ -81,13 +72,27 @@ func process(file string) error {
 
 	img := createImage(data, imageSize)
 
-	imageName := fmt.Sprintf("%s_%vx%v_image.png", trimFilenameExtension(file), imageSize, imageSize)
+	imageName := imageName(file, imageSize)
 	if err := saveImageToFile(img, imageName); err != nil {
 		return fmt.Errorf("failed to save image: %w", err)
 	}
 
 	fmt.Println("Image successfully created:", imageName)
 	return nil
+}
+
+// Process the name of the output file
+func imageName(file string, imageSize int) string {
+	var fileName string
+
+	pos := strings.LastIndexByte(file, '.')
+	if pos != -1 {
+		file = file[:pos]
+	}
+
+	fileName = fmt.Sprintf("%s_%vx%v_image.png", file, imageSize, imageSize)
+
+	return fileName
 }
 
 func main() {
